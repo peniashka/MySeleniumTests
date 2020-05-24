@@ -16,33 +16,46 @@ namespace SeleniunAdvancedTest
         private WebDriverWait _wait;
         private Actions _builder;
 
+
         [SetUp]
+        [Obsolete]
         public void Setup()
         {
             _driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            _driver.Url = "https://demoqa.com/";
-            _driver.Manage().Window.Maximize();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            _driver.Url = "http://www.demoqa.com/";
+           // _driver.Manage().Window.Maximize();
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(30));
             _builder = new Actions(_driver);
+
+            IWebElement page = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/ html")));
+            page.SendKeys(Keys.PageDown);
+
+            IWebElement menu = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div/div[1]")));
+            menu.Click();
+            
         }
 
         [Test]
         [Obsolete]
         public void DragElement_Ofset10_Expected_LocationToBeMoreWith10()
         {
+            IWebElement page = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/ html")));
+            page.SendKeys(Keys.PageDown);
 
-            IWebElement dragableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div[1]/div[2]/div/div[1]/aside[1]/ul/li[5]/a")));
+            IWebElement dragableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("item-4")));
             dragableLink.Click();
 
-            IWebElement sourceBox = _driver.FindElement(By.Id("draggable"));
+            IWebElement sourceBox = _driver.FindElement(By.Id("dragBox"));
 
             int sourceBoxXPosBefore = sourceBox.Location.X;
             int sourceBoxYPosBefore = sourceBox.Location.Y;
+            int x = 10;
+            int y = 10;
 
             _builder
-             .ClickAndHold(sourceBox)
-             .MoveByOffset(10, 10)
-             .Perform();
+               .ClickAndHold(sourceBox)
+               .MoveByOffset(x, y)
+               .Perform();
 
             int sourceBoxXPosAfter = sourceBox.Location.X;
             int sourceBoxYPosAfter = sourceBox.Location.Y;
@@ -58,29 +71,33 @@ namespace SeleniunAdvancedTest
         public void DragAndDrop_Element_MoveOutOfArea()
         {
 
-            IWebElement dragableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div[1]/div[2]/div/div[1]/aside[1]/ul/li[5]/a")));
+            IWebElement page = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/ html")));
+            page.SendKeys(Keys.PageDown);
+
+            IWebElement dragableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("item-4")));
             dragableLink.Click();
 
-            IWebElement workArea = _driver.FindElement(By.Id("sidebar"));
-            
-            int areaXPos = workArea.Location.X;
-            int areaYPos = workArea.Location.Y;
+            IWebElement tabMenu = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/ html / body / div / div / div / div[2] / div[2] / div[1] / nav")));
+            tabMenu.Click();
 
-            IWebElement sourceBox = _driver.FindElement(By.Id("draggable"));
+            IWebElement tabLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/nav/a[2]")));
+            tabLink.Click();
 
-            int x = (100 + areaXPos) * (-1);
-            int y = (150 + areaYPos) * (-1);
+            IWebElement sourceBox = _driver.FindElement(By.Id("restrictedX"));
+
+            int sourceBoxXPosBefore = sourceBox.Location.X;
+            int sourceBoxYPosBefore = sourceBox.Location.Y;
 
             _builder
               .ClickAndHold(sourceBox)
-              .MoveByOffset(x, y)
+              .MoveByOffset(sourceBoxXPosBefore + 10, sourceBoxYPosBefore)
               .Perform();
 
             int sourceBoxXPosAfter = sourceBox.Location.X;
             int sourceBoxYPosAfter = sourceBox.Location.Y;
 
-            Assert.IsTrue(sourceBoxXPosAfter < areaXPos);
-            Assert.IsTrue(sourceBoxYPosAfter < areaYPos);
+            Assert.IsTrue(sourceBoxXPosBefore < sourceBoxXPosAfter);
+            Assert.IsTrue(sourceBoxYPosAfter == sourceBoxYPosBefore);
         }
 
         [TearDown]

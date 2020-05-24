@@ -5,6 +5,7 @@ using OpenQA.Selenium.Support.UI;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 
 namespace SeleniunAdvancedTest
 {
@@ -37,15 +38,39 @@ namespace SeleniunAdvancedTest
             buttonCreateAccount.Click();
         }
 
+        [Obsolete]
+        private void FillAllFields()
+        {
+            IWebElement firstName = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("customer_firstname")));
+            firstName.SendKeys("FirstName");
+
+            IWebElement lastName = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("customer_lastname")));
+            lastName.SendKeys("LastName");
+
+            IWebElement password = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("passwd")));
+            password.SendKeys("pass123");
+
+            IWebElement address = _wait.Until(ExpectedConditions.ElementIsVisible(By.Name("address1")));
+            address.SendKeys("str1, 3, 23");
+
+            IWebElement city = _wait.Until(ExpectedConditions.ElementIsVisible(By.Name("city")));
+            address.SendKeys("city1");
+
+            IWebElement postcode = _wait.Until(ExpectedConditions.ElementIsVisible(By.Name("postcode")));
+            address.SendKeys("12345");
+        }
+
         [Test]
         [Obsolete]
         public void RegistrationFrom_CheckFieldFirstNamed_ExpactedErrorWhenEmpty()
         {
+            FillAllFields();
 
             IWebElement firstName = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("customer_firstname")));
-            firstName.SendKeys(String.Empty);
+            firstName.Clear();
+             // firstName.SendKeys(String.Empty);
 
-            IWebElement buttonRegister = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("submitAccount")));
+             IWebElement buttonRegister = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("submitAccount")));
             buttonRegister.Click();
 
             IWebElement checkStatusText = _wait.Until<IWebElement>(d => d.FindElement(By.XPath("/ html / body / div / div[2] / div / div[3] / div / div / ol")));
@@ -58,11 +83,10 @@ namespace SeleniunAdvancedTest
         [Obsolete]
         public void RegistrationFrom_CheckFieldLastNamed_ExpactedErrorWhenEmpty()
         {
-            IWebElement firstName = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("customer_firstname")));
-            firstName.SendKeys("FirstName");
+            FillAllFields();
 
             IWebElement lastName = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("customer_lastname")));
-            lastName.SendKeys(String.Empty);
+            lastName.Clear();
 
             IWebElement buttonRegister = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("submitAccount")));
             buttonRegister.Click();
@@ -77,11 +101,7 @@ namespace SeleniunAdvancedTest
         [Obsolete]
         public void RegistrationFrom_CheckFieldEmail_IsCorrectEmail()
         {
-            IWebElement firstName = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("customer_firstname")));
-            firstName.SendKeys("FirstName");
-
-            IWebElement lastName = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("customer_lastname")));
-            lastName.SendKeys("LastName");
+            FillAllFields();
 
             IWebElement fieldEmailAddress = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("email")));
             fieldEmailAddress.Clear();
@@ -100,6 +120,8 @@ namespace SeleniunAdvancedTest
         [Obsolete]
         public void RegistrationFrom_CheckAddress_ExpactedErrorWhenEmpty()
         {
+            FillAllFields();
+
             IWebElement address = _wait.Until(ExpectedConditions.ElementIsVisible(By.Name("address1")));
             address.SendKeys(String.Empty);
 
@@ -116,8 +138,10 @@ namespace SeleniunAdvancedTest
         [Obsolete]
         public void RegistrationFrom_CheckCity_ExpactedErrorWhenEmpty()
         {
-            IWebElement address = _wait.Until(ExpectedConditions.ElementIsVisible(By.Name("address1")));
-            address.SendKeys(String.Empty);
+            FillAllFields(); 
+            
+            IWebElement city = _wait.Until(ExpectedConditions.ElementIsVisible(By.Name("city")));
+            city.SendKeys(String.Empty);
 
             IWebElement buttonRegister = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("submitAccount")));
             buttonRegister.Click();
@@ -133,6 +157,8 @@ namespace SeleniunAdvancedTest
         [Obsolete]
         public void RegistrationFrom_CheckPassword_IsEmpty()
         {
+            FillAllFields();
+
             IWebElement address = _wait.Until(ExpectedConditions.ElementIsVisible(By.Name("address1")));
             address.SendKeys(String.Empty);
 
@@ -152,6 +178,8 @@ namespace SeleniunAdvancedTest
         [Obsolete]
         public void RegistrationFrom_CheckPost_RequireFiveDigit()
         {
+            FillAllFields();
+
             IWebElement postcode = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("postcode")));
             postcode.SendKeys("1234a");
 
@@ -175,6 +203,8 @@ namespace SeleniunAdvancedTest
         [Obsolete]
         public void RegistrationFrom_CheckPassword_IsValid()
         {
+            FillAllFields();
+
             IWebElement address = _wait.Until(ExpectedConditions.ElementIsVisible(By.Name("address1")));
             address.SendKeys(String.Empty);
 
@@ -194,6 +224,8 @@ namespace SeleniunAdvancedTest
         [Obsolete]
         public void RegistrationFrom_CheckPhone_MustHaveAtLeastOnePhoneNumber()
         {
+            FillAllFields();
+
             IWebElement homePhone = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("phone")));
             homePhone.SendKeys(String.Empty);
 

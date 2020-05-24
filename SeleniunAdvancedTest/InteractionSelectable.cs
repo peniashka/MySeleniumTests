@@ -19,35 +19,43 @@ namespace SeleniunAdvancedTest
         private Actions _builder;
 
         [SetUp]
+        [Obsolete]
         public void Setup()
         {
             _driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            _driver.Url = "https://demoqa.com/";
+            _driver.Url = "http://www.demoqa.com/";
             _driver.Manage().Window.Maximize();
             _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             _builder = new Actions(_driver);
+
+            IWebElement menu = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div/div[1]")));
+            menu.Click();
         }
+
 
         [Test]
         [Obsolete]
         public void SelectItems_ExpactedToSelectAllOfThem()
         {
 
-            IWebElement selectableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div[1]/div[2]/div/div[1]/aside[1]/ul/li[2]/a")));
+            IWebElement selectableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("item-1")));
             selectableLink.Click();
 
-            List<string> listItemBefore = new List<string>();
+            IWebElement grid = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("demo-tab-grid")));
+            grid.Click();
 
-            List<IWebElement> elementsListBefore = _driver.FindElements(By.XPath("/ html / body / div[1] / div[2] / div / div[2] / div[2] / ol/li")).ToList();
-            foreach (IWebElement element in elementsListBefore)
+            IWebElement elementsListBefore = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("gridContainer")));
+            string valueT = elementsListBefore.Text;
+            string resultT = valueT.Substring(valueT.Length - 4, 4);
+            int listItemBefore = 0;
+
+            if (resultT == "Nine")
             {
-                String value = element.Text;
-                listItemBefore.Add(value);
-
+                listItemBefore = 9;
             }
 
-            IWebElement sourceBox = _driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[2]/div[2]/ol/li[1]"));
-            IWebElement targetBox = _driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[2]/div[2]/ol/li[7]"));
+            IWebElement sourceBox = _driver.FindElement(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[2]/div/div[1]/li[1]"));
+            IWebElement targetBox = _driver.FindElement(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[2]/div/div[3]/li[3]"));
    
             _builder
                 .Click(sourceBox)
@@ -58,12 +66,12 @@ namespace SeleniunAdvancedTest
             string targetElementText = targetBox.Text;
             int countSelectedElememts = 0;
 
-            if (targetElementText == "Item 7")
+            if (targetElementText == "Nine")
             {
-               countSelectedElememts = 7;
+               countSelectedElememts = 9;
             }
           
-             Assert.AreEqual(listItemBefore.Count(), countSelectedElememts);
+             Assert.AreEqual(listItemBefore, countSelectedElememts);
         }
 
         [Test]
@@ -71,7 +79,7 @@ namespace SeleniunAdvancedTest
         public void SelectItem_ExpactedToChangeColor()
         {
 
-            IWebElement selectableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div[1]/div[2]/div/div[1]/aside[1]/ul/li[2]/a")));
+            IWebElement selectableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[1]/div/div/div[1]/div/ul/li[2]/span")));
             selectableLink.Click();
 
             IWebElement sourceBox = _driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[2]/div[2]/ol/li[3]"));

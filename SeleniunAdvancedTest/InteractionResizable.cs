@@ -16,35 +16,41 @@ namespace SeleniunAdvancedTest
         private WebDriverWait _wait;
         private Actions _builder;
 
+
         [SetUp]
+        [Obsolete]
         public void Setup()
         {
             _driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            _driver.Url = "https://demoqa.com/";
+            _driver.Url = "http://www.demoqa.com/";
             _driver.Manage().Window.Maximize();
             _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             _builder = new Actions(_driver);
+
+            IWebElement menu = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div/div[1]")));
+            menu.Click();
         }
+
 
         [Test]
         [Obsolete]
         public void Resizable_ExpectedElementToBeBigger()
         {
 
-            IWebElement resizableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div[1]/div[2]/div/div[1]/aside[1]/ul/li[3]/a")));
+            IWebElement resizableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("item-2")));
             resizableLink.Click();
 
-            IWebElement sourceBox = _driver.FindElement(By.Id("resizable"));
+            IWebElement sourceBox = _driver.FindElement(By.Id("resizableBoxWithRestriction"));
            
             int sourceBoxWidthBefore = sourceBox.Size.Width;
             int sourceBoxHeightBefore = sourceBox.Size.Height;
 
-            IWebElement resizePoint = _driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[2]/div[2]/div/div[3]"));
+            IWebElement resizePoint = _driver.FindElement(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div[1]/div/span"));
           
             _builder
                 .Click(resizePoint)
                 .ClickAndHold(resizePoint)
-                .MoveByOffset(300, 250)
+                .MoveByOffset(50, 50)
                 .Perform();
 
             int sourceBoxWidthAfter = sourceBox.Size.Width;
@@ -59,15 +65,15 @@ namespace SeleniunAdvancedTest
         public void Resizable_ExpectedElementWithMinimunSize()
         {
 
-            IWebElement resizableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div[1]/div[2]/div/div[1]/aside[1]/ul/li[3]/a")));
+            IWebElement resizableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("item-2")));
             resizableLink.Click();
 
-            IWebElement sourceBox = _driver.FindElement(By.Id("resizable"));
-           
+            IWebElement sourceBox = _driver.FindElement(By.Id("resizableBoxWithRestriction"));
+
             int sourceBoxWidthBefore = sourceBox.Size.Width;
             int sourceBoxHeightBefore = sourceBox.Size.Height;
 
-            IWebElement resizePoint = _driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[2]/div[2]/div/div[3]"));
+            IWebElement resizePoint = _driver.FindElement(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div[1]/div/span"));
 
             _builder
                 .Click(resizePoint)
@@ -78,8 +84,8 @@ namespace SeleniunAdvancedTest
             int sourceBoxWidthAfter = sourceBox.Size.Width;
             int sourceBoxHeightAfter = sourceBox.Size.Height;
             
-            Assert.AreEqual(18, sourceBoxWidthAfter);
-            Assert.AreEqual(18, sourceBoxHeightAfter);
+            Assert.AreEqual(150, sourceBoxWidthAfter);
+            Assert.AreEqual(150, sourceBoxHeightAfter);
         }
 
         [TearDown]

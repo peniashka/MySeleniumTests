@@ -16,7 +16,6 @@ namespace SeleniunAdvancedTest
         private WebDriverWait _wait;
         private Actions _builder;
 
-
         [SetUp]
         [Obsolete]
         public void Setup()

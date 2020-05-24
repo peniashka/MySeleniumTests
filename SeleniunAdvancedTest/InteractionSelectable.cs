@@ -4,15 +4,13 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 
 namespace SeleniunAdvancedTest
 {
     [TestFixture]
-    class InteractionSortable
+    class InteractionSelectable
     {
         private IWebDriver _driver;
         private WebDriverWait _wait;
@@ -23,23 +21,25 @@ namespace SeleniunAdvancedTest
         public void Setup()
         {
             _driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            _driver.Url = "http://www.demoqa.com/";
+            _driver.Url = "http://www.demoqa.com/selectable";
             _driver.Manage().Window.Maximize();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(100));
             _builder = new Actions(_driver);
-
-            IWebElement menu = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div/div[1]")));
-            menu.Click();
         }
 
+        [Obsolete]
+        private void ScroolPage()
+        {
+            IWebElement page = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html")));
+            page.SendKeys(Keys.PageDown);
+        }
 
         [Test]
         [Obsolete]
         public void SelectItems_ExpactedToSelectAllOfThem()
         {
-
-            IWebElement selectableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("item-1")));
-            selectableLink.Click();
+            IWebElement tab = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("/ html / body / div / div / div / div[2] / div[2] / div[1] / nav")));
+            tab.Click();
 
             IWebElement grid = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("demo-tab-grid")));
             grid.Click();
@@ -54,8 +54,8 @@ namespace SeleniunAdvancedTest
                 listItemBefore = 9;
             }
 
-            IWebElement sourceBox = _driver.FindElement(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[2]/div/div[1]/li[1]"));
-            IWebElement targetBox = _driver.FindElement(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[2]/div/div[3]/li[3]"));
+            IWebElement sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[2]/div/div[1]/li[1]")));
+            IWebElement targetBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[2]/div/div[3]/li[3]")));
    
             _builder
                 .Click(sourceBox)
@@ -79,10 +79,7 @@ namespace SeleniunAdvancedTest
         public void SelectItem_ExpactedToChangeColor()
         {
 
-            IWebElement selectableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[1]/div/div/div[1]/div/ul/li[2]/span")));
-            selectableLink.Click();
-
-            IWebElement sourceBox = _driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[2]/div[2]/ol/li[3]"));
+            IWebElement sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[1]/ul/li[1]")));
            
             var colorBefore = sourceBox.GetCssValue("color");
 

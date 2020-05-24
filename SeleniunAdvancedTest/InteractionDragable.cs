@@ -21,28 +21,23 @@ namespace SeleniunAdvancedTest
         public void Setup()
         {
             _driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            _driver.Url = "http://www.demoqa.com/";
-           // _driver.Manage().Window.Maximize();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(30));
+            _driver.Url = "http://www.demoqa.com/dragabble";
+            _driver.Manage().Window.Maximize();
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(100));
             _builder = new Actions(_driver);
+        }
 
-            IWebElement page = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/ html")));
+        [Obsolete]
+        private void ScroolPage ()
+        {
+            IWebElement page = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html")));
             page.SendKeys(Keys.PageDown);
-
-            IWebElement menu = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div/div[1]")));
-            menu.Click();
-            
         }
 
         [Test]
         [Obsolete]
         public void DragElement_Ofset10_Expected_LocationToBeMoreWith10()
         {
-            IWebElement page = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/ html")));
-            page.SendKeys(Keys.PageDown);
-
-            IWebElement dragableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("item-4")));
-            dragableLink.Click();
 
             IWebElement sourceBox = _driver.FindElement(By.Id("dragBox"));
 
@@ -54,6 +49,8 @@ namespace SeleniunAdvancedTest
             _builder
                .ClickAndHold(sourceBox)
                .MoveByOffset(x, y)
+               .Release()
+               .Build()
                .Perform();
 
             int sourceBoxXPosAfter = sourceBox.Location.X;
@@ -67,29 +64,24 @@ namespace SeleniunAdvancedTest
 
         [Test]
         [Obsolete]
-        public void DragAndDrop_Element_MoveOutOfArea()
+        public void DragAndDrop_Element_ChangePosX()
         {
+           IWebElement tab = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/nav")));
+            tab.Click();
 
-            IWebElement page = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/ html")));
-            page.SendKeys(Keys.PageDown);
+            IWebElement tabClick = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("draggableExample-tab-axisRestriction")));
+            tabClick.Click();
 
-            IWebElement dragableLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("item-4")));
-            dragableLink.Click();
-
-            IWebElement tabMenu = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/ html / body / div / div / div / div[2] / div[2] / div[1] / nav")));
-            tabMenu.Click();
-
-            IWebElement tabLink = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/nav/a[2]")));
-            tabLink.Click();
-
-            IWebElement sourceBox = _driver.FindElement(By.Id("restrictedX"));
+            IWebElement sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("restrictedX")));
 
             int sourceBoxXPosBefore = sourceBox.Location.X;
             int sourceBoxYPosBefore = sourceBox.Location.Y;
 
             _builder
               .ClickAndHold(sourceBox)
-              .MoveByOffset(sourceBoxXPosBefore + 10, sourceBoxYPosBefore)
+              .MoveByOffset(10, 0)
+              .Release()
+              .Build()
               .Perform();
 
             int sourceBoxXPosAfter = sourceBox.Location.X;
@@ -97,6 +89,35 @@ namespace SeleniunAdvancedTest
 
             Assert.IsTrue(sourceBoxXPosBefore < sourceBoxXPosAfter);
             Assert.IsTrue(sourceBoxYPosAfter == sourceBoxYPosBefore);
+        }
+
+        [Test]
+        [Obsolete]
+        public void DragAndDrop_Element_ChangePosY()
+        {
+            IWebElement tab = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/nav")));
+            tab.Click();
+
+            IWebElement tabClick = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("draggableExample-tab-axisRestriction")));
+            tabClick.Click();
+
+            IWebElement sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("restrictedY")));
+
+            int sourceBoxXPosBefore = sourceBox.Location.X;
+            int sourceBoxYPosBefore = sourceBox.Location.Y;
+
+            _builder
+              .ClickAndHold(sourceBox)
+              .MoveByOffset(0, 10)
+              .Release()
+              .Build()
+              .Perform();
+
+            int sourceBoxXPosAfter = sourceBox.Location.X;
+            int sourceBoxYPosAfter = sourceBox.Location.Y;
+
+            Assert.IsTrue(sourceBoxXPosBefore == sourceBoxXPosAfter);
+            Assert.IsTrue(sourceBoxYPosBefore < sourceBoxYPosAfter);
         }
 
         [TearDown]

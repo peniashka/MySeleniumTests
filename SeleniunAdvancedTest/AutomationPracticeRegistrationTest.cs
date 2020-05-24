@@ -5,7 +5,6 @@ using OpenQA.Selenium.Support.UI;
 using System;
 using System.IO;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 
 namespace SeleniunAdvancedTest
 {
@@ -123,7 +122,7 @@ namespace SeleniunAdvancedTest
             FillAllFields();
 
             IWebElement address = _wait.Until(ExpectedConditions.ElementIsVisible(By.Name("address1")));
-            address.SendKeys(String.Empty);
+            address.Clear();
 
             IWebElement buttonRegister = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("submitAccount")));
             buttonRegister.Click();
@@ -159,11 +158,8 @@ namespace SeleniunAdvancedTest
         {
             FillAllFields();
 
-            IWebElement address = _wait.Until(ExpectedConditions.ElementIsVisible(By.Name("address1")));
-            address.SendKeys(String.Empty);
-
             IWebElement password = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("passwd")));
-            password.SendKeys(String.Empty);
+            password.Clear();
 
             IWebElement buttonRegister = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("submitAccount")));
             buttonRegister.Click();
@@ -205,10 +201,8 @@ namespace SeleniunAdvancedTest
         {
             FillAllFields();
 
-            IWebElement address = _wait.Until(ExpectedConditions.ElementIsVisible(By.Name("address1")));
-            address.SendKeys(String.Empty);
-
             IWebElement password = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("passwd")));
+            password.Clear();
             password.SendKeys("vvvv");
 
             IWebElement buttonRegister = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("submitAccount")));

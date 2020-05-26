@@ -20,7 +20,7 @@ namespace SeleniunAdvancedTest
         [Obsolete]
          public void Setup()
         {
-            _driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+             _driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             _driver.Url = "http://www.demoqa.com/sortable";
             _driver.Manage().Window.Maximize();
             _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(100));
@@ -48,6 +48,7 @@ namespace SeleniunAdvancedTest
                 .ClickAndHold(sourceBox)
                 .MoveToElement(targetBox)
                 .MoveByOffset(0, 10)
+                .Release()
                 .Perform();
 
             int sourcePosYAfter = sourceBox.Location.Y;
@@ -59,8 +60,7 @@ namespace SeleniunAdvancedTest
         [Obsolete]
         public void Sortable_MoveFirstElement_ExpactedXpositionToBeTheSame_AfterMovement()
         {
-            IWebElement page = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html")));
-            page.SendKeys(Keys.F5);
+            ScroolPage();
 
             IWebElement sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div[1]")));
             IWebElement targetBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div[6]")));
@@ -72,11 +72,33 @@ namespace SeleniunAdvancedTest
                 .ClickAndHold(sourceBox)
                 .MoveToElement(targetBox)
                 .MoveByOffset(0, 10)
+                .Release()
                 .Perform();
 
             int sourcePosXAfter = sourceBox.Location.X;
 
             Assert.AreEqual(sourcePosXBefore, sourcePosXAfter);
+        }
+
+        [Test]
+        [Obsolete]
+        public void Sortable_MoveFirstElement_OnSecondPosition()
+        {
+            ScroolPage();
+
+            IWebElement sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div[1]")));
+            IWebElement targetBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div[2]")));
+
+            _builder
+                .Click(sourceBox)
+                .ClickAndHold(sourceBox)
+                .MoveToElement(targetBox)
+                .MoveByOffset(0, 10)
+                .Release()
+                .Perform();
+
+            var oneNewText = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#demo-tabpane-list > div > div:nth-child(2)"))).Text;
+            Assert.AreEqual("One", oneNewText);
         }
 
         [TearDown]

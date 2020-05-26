@@ -56,7 +56,7 @@ namespace SeleniunAdvancedTest
 
         [Test]
         [Obsolete]
-        public void DragAndDrop_Element_CenterTarget_targetMoveOutOfArea()
+        public void DragAndDrop_Element_targetMoveOutOfArea()
         {
             IWebElement sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("draggable")));
 

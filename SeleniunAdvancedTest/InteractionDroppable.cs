@@ -22,17 +22,10 @@ namespace SeleniunAdvancedTest
         public void Setup()
         {
             _driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            _driver.Url = "http://www.demoqa.com/droppable";
             _driver.Manage().Window.Maximize();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(100));
+            _driver.Url = "http://www.demoqa.com/droppable";
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             _builder = new Actions(_driver);
-        }
-
-        [Obsolete]
-        private void ScroolPage()
-        {
-            IWebElement page = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html")));
-            page.SendKeys(Keys.PageDown);
         }
 
         [Test]
@@ -63,7 +56,7 @@ namespace SeleniunAdvancedTest
             var PosXBefore = sourceBox.Location.X;
             var PosYBefore = sourceBox.Location.Y;
 
-            IWebElement workArea = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]")));
+            IWebElement workArea = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@class='col-12 mt-4 col-md-6']")));
 
             var workAreaPosXBefore = workArea.Location.X;
             var workAreaPosYBefore = workArea.Location.Y;
@@ -84,17 +77,13 @@ namespace SeleniunAdvancedTest
         }
 
         [Test]
-        [Obsolete]
-        public void DragAndDrop_Element_CenterTarget_NotAcepted()
+        public void DragAndDrop_Element_CenterTarget_NotReverted()
         {
-            IWebElement tab = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/nav")));
-            tab.Click();
+            IWebElement tabMenuAccepted = _driver.FindElement(By.XPath("//*[@id='droppableExample-tab-revertable']"));
+            tabMenuAccepted.Click();
 
-            IWebElement tabMenu = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/nav/a[2]")));
-            tabMenu.Click();
-
-            IWebElement sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[2]/div/div[1]/div[2]")));
-            IWebElement targetBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[2]/div/div[2]")));
+            IWebElement sourceBox = _driver.FindElement(By.Id("notRevertable"));
+            IWebElement targetBox = _driver.FindElement(By.XPath("//*[@class='revertable-drop-container']//*[@id='droppable']"));
 
             var colorBefore = targetBox.GetCssValue("color");
 
@@ -105,10 +94,10 @@ namespace SeleniunAdvancedTest
 
             var colorAfter = targetBox.GetAttribute("background-color");
 
-            Assert.IsNotNull(colorBefore);
-            Assert.IsNull(colorAfter);
+            Assert.AreNotEqual(colorAfter, colorBefore);
         }
 
+      
         [TearDown]
         public void TearDown()
         {

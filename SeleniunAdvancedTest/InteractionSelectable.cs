@@ -21,57 +21,10 @@ namespace SeleniunAdvancedTest
         public void Setup()
         {
             _driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            _driver.Url = "http://www.demoqa.com/selectable";
             _driver.Manage().Window.Maximize();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(100));
+            _driver.Url = "http://www.demoqa.com/selectable";
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             _builder = new Actions(_driver);
-        }
-
-        [Obsolete]
-        private void ScroolPage()
-        {
-            IWebElement page = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html")));
-            page.SendKeys(Keys.PageDown);
-        }
-
-        [Test]
-        [Obsolete]
-        public void SelectItems_ExpactedToSelectAllOfThem()
-        {
-            IWebElement tab = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("/ html / body / div / div / div / div[2] / div[2] / div[1] / nav")));
-            tab.Click();
-
-            IWebElement grid = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("demo-tab-grid")));
-            grid.Click();
-
-            IWebElement elementsListBefore = _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("gridContainer")));
-            string valueT = elementsListBefore.Text;
-            string resultT = valueT.Substring(valueT.Length - 4, 4);
-            int listItemBefore = 0;
-
-            if (resultT == "Nine")
-            {
-                listItemBefore = 9;
-            }
-
-            IWebElement sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[2]/div/div[1]/li[1]")));
-            IWebElement targetBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[2]/div/div[3]/li[3]")));
-   
-            _builder
-                .Click(sourceBox)
-                .ClickAndHold(sourceBox)
-                .MoveToElement(targetBox)
-                .Perform();
-
-            string targetElementText = targetBox.Text;
-            int countSelectedElememts = 0;
-
-            if (targetElementText == "Nine")
-            {
-               countSelectedElememts = 9;
-            }
-          
-             Assert.AreEqual(listItemBefore, countSelectedElememts);
         }
 
         [Test]
@@ -79,8 +32,7 @@ namespace SeleniunAdvancedTest
         public void SelectItem_ExpactedToChangeColor()
         {
 
-            IWebElement sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[1]/ul/li[1]")));
-           
+            IWebElement sourceBox = _driver.FindElement(By.XPath("//*[@id='verticalListContainer']//li[normalize-space(text())='Cras justo odio']"));
             var colorBefore = sourceBox.GetCssValue("color");
 
             _builder
@@ -90,6 +42,57 @@ namespace SeleniunAdvancedTest
             var colorAfter = sourceBox.GetCssValue("color");
 
             Assert.AreNotEqual(colorAfter, colorBefore);
+        }
+
+        [Test]
+        [Obsolete]
+        public void SelectItems_ExpactedToSelectAllOfThem()
+        {
+            IWebElement tab = _driver.FindElement(By.XPath("//*[@id='demo-tab-grid']"));
+            tab.Click();
+
+            IWebElement element1 = _driver.FindElement(By.XPath("//*[@id='row1']//li[normalize-space(text()) = 'One']"));
+            IWebElement element2 = _driver.FindElement(By.XPath("//*[@id='row1']//li[normalize-space(text()) = 'Two']"));
+            IWebElement element3 = _driver.FindElement(By.XPath("//*[@id='row1']//li[normalize-space(text()) = 'Three']"));
+            IWebElement element4 = _driver.FindElement(By.XPath("//*[@id='row2']//li[normalize-space(text()) = 'Four']"));
+            IWebElement element5 = _driver.FindElement(By.XPath("//*[@id='row2']//li[normalize-space(text()) = 'Five']"));
+            IWebElement element6 = _driver.FindElement(By.XPath("//*[@id='row2']//li[normalize-space(text()) = 'Six']"));
+            IWebElement element7 = _driver.FindElement(By.XPath("//*[@id='row3']//li[normalize-space(text()) = 'Seven']"));
+            IWebElement element8 = _driver.FindElement(By.XPath("//*[@id='row3']//li[normalize-space(text()) = 'Eight']"));
+            IWebElement element9 = _driver.FindElement(By.XPath("//*[@id='row3']//li[normalize-space(text()) = 'Nine']"));
+            
+            var targetBoxListBefore = _driver.FindElements(By.XPath("//*[@id='gridContainer']//li"));
+            int countElement = targetBoxListBefore.Count;
+
+            _builder
+                .Click(element1)
+                .KeyDown(Keys.Control)
+                .Click(element2)
+                .Click(element3)
+                .Click(element4)
+                .Click(element5)
+                .Click(element6)
+                .Click(element7)
+                .Click(element8)
+                .Click(element9)
+                .KeyUp(Keys.Control)
+                .Release()
+                .Perform();
+
+            int countSelectedElememts = 0;
+            var targetBoxListAfter = _driver.FindElements(By.XPath("//*[@id='gridContainer']//li"));
+
+            foreach (IWebElement button in targetBoxListAfter)
+            {
+                var targetColor = button.GetCssValue("color");
+
+                if (targetColor == "rgba(255, 255, 255, 1)")
+                {
+                    countSelectedElememts += 1;
+                }
+            }
+
+            Assert.AreEqual(countElement, countSelectedElememts);
         }
 
         [TearDown]

@@ -21,29 +21,22 @@ namespace SeleniunAdvancedTest
         public void Setup()
         {
             _driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            _driver.Url = "http://www.demoqa.com/resizable";
             _driver.Manage().Window.Maximize();
+            _driver.Url = "http://www.demoqa.com/resizable";
             _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             _builder = new Actions(_driver);
-        }
-
-        [Obsolete]
-        private void ScroolPage()
-        {
-            IWebElement page = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html")));
-            page.SendKeys(Keys.PageDown);
         }
 
         [Test]
         [Obsolete]
         public void Resizable_ExpectedElementToBeBigger()
         {
-            IWebElement _sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div[1]/div")));
+            IWebElement _sourceBox = _driver.FindElement(By.Id("resizableBoxWithRestriction"));
 
             int sourceBoxWidthBefore = _sourceBox.Size.Width;
             int sourceBoxHeightBefore = _sourceBox.Size.Height;
 
-            IWebElement resizePoint = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div[1]/div/span")));
+            IWebElement resizePoint = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='resizableBoxWithRestriction']//span")));
             resizePoint.Click();
 
             _builder
@@ -63,12 +56,12 @@ namespace SeleniunAdvancedTest
         [Obsolete]
         public void Resizable_ExpectedElementWithMinimunSize()
         {
-            IWebElement _sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div[1]/div")));
+            IWebElement _sourceBox = _driver.FindElement(By.Id("resizableBoxWithRestriction"));
 
             int sourceBoxWidthBefore = _sourceBox.Size.Width;
             int sourceBoxHeightBefore = _sourceBox.Size.Height;
 
-            IWebElement resizePoint = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div[1]/div/span")));
+            IWebElement resizePoint = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='resizableBoxWithRestriction']//span")));
             _builder
                 .Click(resizePoint)
                 .ClickAndHold(resizePoint)

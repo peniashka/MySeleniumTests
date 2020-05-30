@@ -20,29 +20,22 @@ namespace SeleniunAdvancedTest
         [Obsolete]
          public void Setup()
         {
-             _driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            _driver.Url = "http://www.demoqa.com/sortable";
+            _driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             _driver.Manage().Window.Maximize();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(100));
+            _driver.Url = "http://www.demoqa.com/sortable";
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             _builder = new Actions(_driver);
-        }
-
-        [Obsolete]
-        private void ScroolPage()
-        {
-            IWebElement page = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html")));
-            page.SendKeys(Keys.PageDown);
         }
 
         [Test]
         [Obsolete]
-        public void Sortable_MoveFirstElement_ExpactedFirstElement_YpositionToBeDifferent_AfterMovement()
+        public void Sortable_MoveFirstElement_OnSecondPosition_ExpectedYpositionToBeGreaterWith50()
         {
-            IWebElement sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div[1]")));
-            IWebElement targetBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div[6]")));
+            IWebElement sourceBox = _driver.FindElement(By.XPath("//*[@id='sortableContainer']//div[normalize-space(text())='One']"));
+            IWebElement targetBox = _driver.FindElement(By.XPath("//*[@id='sortableContainer']//div[normalize-space(text())='Two']"));
 
-            int targetPosYBefore = targetBox.Location.Y;
-
+            int sourcePosYBefore = sourceBox.Location.Y;
+           
             _builder
                 .Click(sourceBox)
                 .ClickAndHold(sourceBox)
@@ -51,19 +44,20 @@ namespace SeleniunAdvancedTest
                 .Release()
                 .Perform();
 
-            int sourcePosYAfter = sourceBox.Location.Y;
+            sourceBox = _driver.FindElement(By.XPath("//*[@id='sortableContainer']//div[normalize-space(text())='One']"));
 
-            Assert.AreNotEqual(targetPosYBefore, sourcePosYAfter);
+            int sourcePosYAfter = sourceBox.Location.Y;
+            int expectedPosY = sourcePosYBefore + 50;
+
+            Assert.AreEqual(expectedPosY, sourcePosYAfter);
         }
 
         [Test]
         [Obsolete]
         public void Sortable_MoveFirstElement_ExpactedXpositionToBeTheSame_AfterMovement()
         {
-            ScroolPage();
-
-            IWebElement sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div[1]")));
-            IWebElement targetBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div[6]")));
+            IWebElement sourceBox = _driver.FindElement(By.XPath("//*[@id='sortableContainer']//div[normalize-space(text())='One']"));
+            IWebElement targetBox = _driver.FindElement(By.XPath("//*[@id='sortableContainer']//div[normalize-space(text())='Six']"));
 
             int sourcePosXBefore = sourceBox.Location.X;
 
@@ -84,10 +78,8 @@ namespace SeleniunAdvancedTest
         [Obsolete]
         public void Sortable_MoveFirstElement_OnSecondPosition()
         {
-            ScroolPage();
-
-            IWebElement sourceBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div[1]")));
-            IWebElement targetBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div[2]")));
+            IWebElement sourceBox = _driver.FindElement(By.XPath("//*[@id='sortableContainer']//div[normalize-space(text())='One']"));
+            IWebElement targetBox = _driver.FindElement(By.XPath("//*[@id='sortableContainer']//div[normalize-space(text())='Two']"));
 
             _builder
                 .Click(sourceBox)

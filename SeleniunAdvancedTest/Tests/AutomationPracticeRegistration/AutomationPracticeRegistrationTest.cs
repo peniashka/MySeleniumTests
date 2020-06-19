@@ -48,10 +48,8 @@ namespace SeleniunAdvancedTest
             _user.FirstName = string.Empty;
 
             _practiceFormPage.FillForm(_user);
-            
-            IWebElement checkStatusText = Driver.FindElement(By.XPath("/ html / body / div / div[2] / div / div[3] / div / div / ol"));
 
-            _practiceFormPage.AssertCheckErrorText(checkStatusText, "firstname is required.");
+            _practiceFormPage.AssertCheckErrorText(_practiceFormPage.WorningTextFiled, "firstname is required.");
         }
 
         [Test]
@@ -63,9 +61,7 @@ namespace SeleniunAdvancedTest
 
             _practiceFormPage.FillForm(_user);
 
-            IWebElement checkStatusText = Driver.FindElement(By.XPath("/ html / body / div / div[2] / div / div[3] / div / div / ol"));
-           
-            _practiceFormPage.AssertCheckErrorText(checkStatusText, "lastname is required.");
+            _practiceFormPage.AssertCheckErrorText(_practiceFormPage.WorningTextFiled, "lastname is required.");
         }
 
         [Test]
@@ -82,9 +78,7 @@ namespace SeleniunAdvancedTest
 
             _practiceFormPage.FillForm(_user);
 
-            IWebElement checkStatusText = Wait.Until<IWebElement>(d => d.FindElement(By.XPath("/ html / body / div / div[2] / div / div[3] / div / div / ol")));
-
-            _practiceFormPage.AssertCheckErrorText(checkStatusText, "email is invalid.");
+            _practiceFormPage.AssertCheckErrorText(_practiceFormPage.WorningTextFiled, "email is invalid.");
         }
 
         [Test]
@@ -95,9 +89,7 @@ namespace SeleniunAdvancedTest
 
             _practiceFormPage.FillForm(_user);
 
-            IWebElement checkStatusText = Wait.Until<IWebElement>(d => d.FindElement(By.XPath("/ html / body / div / div[2] / div / div[3] / div / div / ol")));
-
-            _practiceFormPage.AssertCheckErrorText(checkStatusText, "address1 is required.");
+            _practiceFormPage.AssertCheckErrorText(_practiceFormPage.WorningTextFiled, "address1 is required.");
         }
 
         [Test]
@@ -108,9 +100,7 @@ namespace SeleniunAdvancedTest
 
             _practiceFormPage.FillForm(_user);
 
-            IWebElement checkStatusText = Wait.Until<IWebElement>(d => d.FindElement(By.XPath("/ html / body / div / div[2] / div / div[3] / div / div / ol")));
-
-            _practiceFormPage.AssertCheckErrorText(checkStatusText, "city is required.");
+            _practiceFormPage.AssertCheckErrorText(_practiceFormPage.WorningTextFiled, "city is required.");
          }
 
 
@@ -122,9 +112,7 @@ namespace SeleniunAdvancedTest
 
             _practiceFormPage.FillForm(_user);
 
-            IWebElement checkStatusText = Wait.Until<IWebElement>(d => d.FindElement(By.XPath("/ html / body / div / div[2] / div / div[3] / div / div / ol")));
-
-            _practiceFormPage.AssertCheckErrorText(checkStatusText, "passwd is required.");
+            _practiceFormPage.AssertCheckErrorText(_practiceFormPage.WorningTextFiled, "passwd is required.");
         }
 
         [Test]
@@ -138,11 +126,9 @@ namespace SeleniunAdvancedTest
             int n;
             bool isNumeric = int.TryParse(_user.Password, out n);
 
-            IWebElement checkStatusText = Wait.Until<IWebElement>(d => d.FindElement(By.XPath("/ html / body / div / div[2] / div / div[3] / div / div / ol")));
-
             if (_user.Password.Length != 5 || !isNumeric)
             {
-                _practiceFormPage.AssertCheckErrorText(checkStatusText, "The Zip/Postal code you've entered is invalid. It must follow this format: 00000");
+                _practiceFormPage.AssertCheckErrorText(_practiceFormPage.WorningTextFiled, "The Zip/Postal code you've entered is invalid. It must follow this format: 00000");
             }
         }
 
@@ -154,9 +140,7 @@ namespace SeleniunAdvancedTest
 
             _practiceFormPage.FillForm(_user);
 
-            IWebElement checkStatusText = Wait.Until<IWebElement>(d => d.FindElement(By.XPath("/ html / body / div / div[2] / div / div[3] / div / div / ol")));
-
-            _practiceFormPage.AssertCheckErrorText(checkStatusText, "passwd is invalid.");
+            _practiceFormPage.AssertCheckErrorText(_practiceFormPage.WorningTextFiled, "passwd is invalid.");
         }
 
         [Test]
@@ -167,8 +151,7 @@ namespace SeleniunAdvancedTest
 
             _practiceFormPage.FillForm(_user);
 
-            IWebElement checkStatusText = Wait.Until<IWebElement>(d => d.FindElement(By.XPath("/ html / body / div / div[2] / div / div[3] / div / div / ol")));
-            _practiceFormPage.AssertCheckErrorText(checkStatusText, "You must register at least one phone number.");
+            _practiceFormPage.AssertCheckErrorText(_practiceFormPage.WorningTextFiled, "You must register at least one phone number.");
         }
 
         [TearDown]

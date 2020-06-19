@@ -21,7 +21,7 @@ namespace SeleniunAdvancedTest.Tests.GoogleSearch
         public void SearchToolSelenium_ClickFirstResult_ExpectedToBe_SeleniumWebBrowserAutomation()
         {
 
-            IWebElement searchField = Wait.Until<IWebElement>(d => d.FindElement(By.XPath("/html/body/div/div[3]/form/div[2]/div[1]/div[1]/div/div[2]/input")));
+            IWebElement searchField = Driver.FindElement(By.XPath("//*[@class = 'gLFyf gsfi']"));
             searchField.SendKeys("selenium");
             searchField.SendKeys(Keys.Enter);
 

@@ -24,8 +24,10 @@ namespace SeleniunAdvancedTest.Pages.PracticeForm
 
         public IWebElement ButtonSignIn => Driver.FindElement(By.XPath("//*[@class = 'login']"));
 
-        public IWebElement FieldEmailAddress => Driver.FindElement(By.XPath("/html/body/div/div[2]/div/div[3]/div/div/div[1]/form/div/div[2]/input"));
+        public IWebElement FieldEmailAddress => Driver.FindElement(By.XPath("//*[@id = 'email_create']"));
 
         public IWebElement ButtonCreateAccount => Driver.FindElement(By.Id("SubmitCreate"));
+
+        public IWebElement WorningTextFiled => Driver.FindElement(By.XPath("//*[@class = 'alert alert-danger']"));
     }
 }

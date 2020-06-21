@@ -21,13 +21,16 @@ namespace SeleniunAdvancedTest.Tests.GoogleSearch
         [Test]
         public void OpenSoftUni_GoToQA_Automation()
         {
-            IWebElement courses = Driver.FindElement(By.XPath(@"//*[@id='header-nav']/div[1]/ul/li[2]/a/span"));
+            IWebElement menuCources = Driver.FindElement(By.XPath("/html/body/div[1]/div[1]/header/nav/div[1]/ul/li[2]/a"));
+            menuCources.Click();
+
+            IWebElement opencources = Driver.FindElement(By.XPath("/html/body/div[1]/div[1]/header/nav/div[1]/ul/li[2]/div/div/div[2]/div[2]/div/div[2]/div[2]/div[1]/i"));
+            opencources.Click();
+
+            IWebElement courses = Driver.FindElement(By.XPath(@"//*[@class='col-md-8 open-courses-wrapper open-courses-background']/div[1]/div[2]/div[2]/div[2]/ul/li[7]"));
             courses.Click();
 
-            IWebElement qaCourseLink = Driver.FindElement(By.LinkText("QA Automation - май 2020"));
-            qaCourseLink.Click();
-
-            IWebElement header = Driver.FindElement(By.XPath(@"/html/body/div[2]/header/h1"));
+            IWebElement header = Driver.FindElement(By.XPath("//*[@class= 'text-center']"));
            
             var IsExists = isElementPresent(By.TagName("h1"));
            

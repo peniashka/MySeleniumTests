@@ -35,7 +35,7 @@ namespace SeleniunAdvancedTest.Tests.AutomationPracticeRegistration
             _practiceFormPage.ButtonCreateAccount.Click();
 
             this.WaitForLoad();
-            IWebElement registrationMail = Driver.FindElement(By.Id("email"));
+           IWebElement registrationMail = Wait.Until<IWebElement>(d => d.FindElement(By.XPath("/html/body/div/div[2]/div/div[3]/div/div/form/div[1]/div[4]/input")));
             ScrollTo(registrationMail);
 
              _practiceFormPage.AssertCheckAtributeValue(registrationMail, _email);
